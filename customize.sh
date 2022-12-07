@@ -14,11 +14,11 @@ head -n -1 $(magisk --path)/.magisk/mirror/system/etc/fonts.xml >$MODPATH/system
 set_perm_recursive $MODPATH/tool root root 700 700
 
 ui_print "Injecting custom fonts"
-for fontfile in $(ls $MODPATH/system/fonts); do
-	fontname=$(FONTCONFIG_PATH=$MODPATH/tool LD_LIBRARY_PATH=$MODPATH/tool $MODPATH/tool/fc-scan -f '%{postscriptname}' $MODPATH/system/fonts/$fontfile)
+for fontfile in $MODPATH/system/fonts/*.*; do
+	fontname=$(FONTCONFIG_PATH=$MODPATH/tool LD_LIBRARY_PATH=$MODPATH/tool $MODPATH/tool/fc-scan -f '%{postscriptname}' "$fontfile")
 	ui_print "Add custom fonts $fontname"
 	echo '	<family name="'$fontname'">' >>$MODPATH/system/etc/fonts.xml
-	echo "		<font>$fontfile</font>" >>$MODPATH/system/etc/fonts.xml
+	echo "		<font>$(basename fontfile)</font>" >>$MODPATH/system/etc/fonts.xml
 	echo "	</family>" >>$MODPATH/system/etc/fonts.xml
 done
 
