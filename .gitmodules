@@ -1,0 +1,3 @@
+[submodule "fontconfig"]
+	path = fontconfig
+	url = https://gitlab.freedesktop.org/fontconfig/fontconfig
