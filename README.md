@@ -12,3 +12,7 @@ This module configures fonts that you add for system-wise usage.
 ## Why do I need it?
 
 Add fonts for applications like browsers and e-books readers, such as `Google Play Books`.
+
+## Reference
+
+Parser location in [Android Code Search](https://cs.android.com/): `frameworks/base/graphics/java/android/graphics/FontListParser.java`.

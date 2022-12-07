@@ -14,13 +14,21 @@ head -n -1 $(magisk --path)/.magisk/mirror/system/etc/fonts.xml >$MODPATH/system
 set_perm_recursive $MODPATH/tool root root 700 700
 
 ui_print "Injecting custom fonts"
-for fontfile in $MODPATH/system/fonts/*.*; do
-	fontname=$(FONTCONFIG_PATH=$MODPATH/tool LD_LIBRARY_PATH=$MODPATH/tool $MODPATH/tool/fc-scan -f '%{postscriptname}' "$fontfile")
-	ui_print "Add custom fonts $fontname"
-	echo '	<family name="'$fontname'">' >>$MODPATH/system/etc/fonts.xml
-	echo "		<font>$(basename fontfile)</font>" >>$MODPATH/system/etc/fonts.xml
-	echo "	</family>" >>$MODPATH/system/etc/fonts.xml
+cd $MODPATH/system/fonts/
+fscan() {
+	FONTCONFIG_PATH=$MODPATH/tool LD_LIBRARY_PATH=$MODPATH/tool $MODPATH/tool/fc-scan "$@"
+}
+for fontfile in *.*; do
+	ui_print "Add custom fonts $fontfile"
+	fscan -f '\t<family name="%{family[0]}">\n\t\t<font postScriptName="%{postscriptname}">%{file}</font>\n\t</family>\n' \
+		"$fontfile" >>$MODPATH/system/etc/fonts.xml
+	fscan -f "%{family}" "$fontfile" | grep ',' >/dev/null
+	if [ $? -eq 0 ]; then
+		fscan -f '\t<alias name="%{family[1]}" to="%{family[0]}" />\n'\
+			"$fontfile" >>$MODPATH/system/etc/fonts.xml
+	fi
 done
+cd /
 
 echo "</familyset>" >>$MODPATH/system/etc/fonts.xml
 ui_print "New fonts.xml generated"
