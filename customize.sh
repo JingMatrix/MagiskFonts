@@ -20,11 +20,11 @@ fscan() {
 }
 for fontfile in *.*; do
 	ui_print "Add custom fonts $fontfile"
-	fscan -f '\t<family name="%{family[0]}">\n\t\t<font postScriptName="%{postscriptname}">%{file}</font>\n\t</family>\n' \
+	fscan -f '\t<family name="%{family[0]|downcase}">\n\t\t<font postScriptName="%{postscriptname}">%{file}</font>\n\t</family>\n' \
 		"$fontfile" >>$MODPATH/system/etc/fonts.xml
 	fscan -f "%{family}" "$fontfile" | grep ',' >/dev/null
 	if [ $? -eq 0 ]; then
-		fscan -f '\t<alias name="%{family[1]}" to="%{family[0]}" />\n'\
+		fscan -f '\t<alias name="%{family[1]}" to="%{family[0]|downcase}" />\n'\
 			"$fontfile" >>$MODPATH/system/etc/fonts.xml
 	fi
 done
