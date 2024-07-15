@@ -9,7 +9,9 @@ fi
 
 ui_print "Pull original fonts.xml"
 mkdir -p $MODPATH/system/etc
-head -n -1 $(magisk --path)/.magisk/mirror/system/etc/fonts.xml >$MODPATH/system/etc/fonts.xml
+sed '/^<!-- <\/familyset> -->/q' /system/etc/fonts.xml >$MODPATH/system/etc/fonts.xml
+sed -i '$ d' $MODPATH/system/etc/fonts.xml
+echo '<!-- </familyset> -->' >>$MODPATH/system/etc/fonts.xml
 
 set_perm_recursive $MODPATH/tool root root 700 700
 
