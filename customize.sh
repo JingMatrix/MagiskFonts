@@ -7,30 +7,34 @@ if [ -z $MAGISK_VER ]; then
 	MODPATH=$PWD
 fi
 
-ui_print "Pull original fonts.xml"
-mkdir -p $MODPATH/system/etc
-sed '/^<!-- <\/familyset> -->/q' /system/etc/fonts.xml >$MODPATH/system/etc/fonts.xml
-sed -i '$ d' $MODPATH/system/etc/fonts.xml
-echo '<!-- </familyset> -->' >>$MODPATH/system/etc/fonts.xml
+font_dir="/product"
+font_config_file="$font_dir/etc/fonts_customization.xml"
+config_end_mark="fonts-modification"
+
+ui_print "Pull original $font_config_file"
+mkdir -p $MODPATH/$font_dir/etc
+sed "/^<!-- <\/$config_end_mark> -->/q" $font_config_file >$MODPATH/$font_config_file
+sed -i '$ d' $MODPATH/$font_config_file
+echo "<!-- </$config_end_mark> -->" >>$MODPATH/$font_config_file
 
 set_perm_recursive $MODPATH/tool root root 700 700
 
 ui_print "Injecting custom fonts"
-cd $MODPATH/system/fonts/
+cd $MODPATH/$font_dir/fonts/
 fscan() {
 	FONTCONFIG_PATH=$MODPATH/tool LD_LIBRARY_PATH=$MODPATH/tool $MODPATH/tool/fc-scan "$@"
 }
 for fontfile in *.*; do
 	ui_print "Add custom fonts $fontfile"
-	fscan -f '\t<family name="%{family[0]|downcase}">\n\t\t<font postScriptName="%{postscriptname}">%{file}</font>\n\t</family>\n' \
-		"$fontfile" >>$MODPATH/system/etc/fonts.xml
+	fscan -f '  <family customizationType="new-named-family" name="%{family[0]|downcase}">\n    <font postScriptName="%{postscriptname}" weight="400" style="normal">%{file}</font>\n  </family>\n\n' \
+		"$fontfile" >>$MODPATH/$font_config_file
 	fscan -f "%{family}" "$fontfile" | grep ',' >/dev/null
 	if [ $? -eq 0 ]; then
-		fscan -f '\t<alias name="%{family[1]}" to="%{family[0]|downcase}" />\n'\
-			"$fontfile" >>$MODPATH/system/etc/fonts.xml
+		fscan -f '  <alias name="%{family[1]}" to="%{family[0]|downcase}" />\n\n'\
+			"$fontfile" >>$MODPATH/$font_config_file
 	fi
 done
 cd /
 
-echo "</familyset>" >>$MODPATH/system/etc/fonts.xml
-ui_print "New fonts.xml generated"
+echo "</fonts-modification>" >>$MODPATH/$font_config_file
+ui_print "New $font_config_file generated"
