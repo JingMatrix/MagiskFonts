@@ -15,4 +15,4 @@ Add fonts for applications like browsers and e-books readers, such as `Google Pl
 
 ## Reference
 
-Parser location in [Android Code Search](https://cs.android.com/): `frameworks/base/graphics/java/android/graphics/FontListParser.java`.
+Parser location in [Android Code Search](https://cs.android.com/): [frameworks/base/graphics/java/android/graphics/FontListParser.java](https://cs.android.com/android/platform/superproject/main/+/main:frameworks/base/graphics/java/android/graphics/FontListParser.java).
