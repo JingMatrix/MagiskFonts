@@ -5,8 +5,8 @@ This module configures fonts that you add for system-wise usage.
 ## Usage
 
 1. Clone this repository: `git clone --depth=1 https://github.com/JingMatrix/MagiskFonts`;
-2. Create a directory `product/fonts`: `mkdir -p product/fonts`;
-3. Put your fonts inside `product/fonts`, currently `ttf` files work well;
+2. Create a directory `system/fonts`: `mkdir -p system/fonts`;
+3. Put your fonts inside `system/fonts`, currently `ttf` files work well;
 4. Pack and install the zip module: `7z a MagiskFonts.zip META-INF customize.sh module.prop system tool`.
 
 ## Why do I need it?
