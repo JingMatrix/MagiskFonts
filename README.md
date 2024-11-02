@@ -11,7 +11,8 @@ This module configures fonts that you add for system-wise usage.
 
 ## Why do I need it?
 
-Add fonts for applications like browsers and e-books readers, such as `Google Play Books`.
+Add fonts for applications like browsers and e-books readers.
+However, in Android 15, `Chrome` and `Google Play Books` ignore customs fonts, while `FireFox` does render them.
 
 ## Reference
 
