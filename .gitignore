@@ -1,3 +1,6 @@
+system
 system/fonts/*.ttf
+product/fonts/*.ttf
 system/etc/fonts.xml
+product/etc/fonts.xml
 MagiskFonts.zip
